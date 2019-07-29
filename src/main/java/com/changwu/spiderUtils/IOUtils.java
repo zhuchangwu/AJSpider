@@ -1,4 +1,4 @@
-package com.changwu.AJSpider.spiderUtils;
+package com.changwu.spiderUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

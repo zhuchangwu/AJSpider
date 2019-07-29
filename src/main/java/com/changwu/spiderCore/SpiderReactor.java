@@ -1,4 +1,4 @@
-package com.changwu.AJSpider.spiderCore;
+package com.changwu.spiderCore;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;

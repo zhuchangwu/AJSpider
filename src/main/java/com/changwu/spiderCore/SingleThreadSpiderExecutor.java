@@ -1,8 +1,8 @@
-package com.changwu.AJSpider.spiderCore;
+package com.changwu.spiderCore;
 
-import com.changwu.AJSpider.spiderUtils.IOUtils;
-import com.changwu.AJSpider.spiderUtils.PersistenceUtil;
-import com.changwu.AJSpider.spiderUtils.SpiderResolutionUtil;
+import com.changwu.spiderUtils.IOUtils;
+import com.changwu.spiderUtils.PersistenceUtil;
+import com.changwu.spiderUtils.SpiderResolutionUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;

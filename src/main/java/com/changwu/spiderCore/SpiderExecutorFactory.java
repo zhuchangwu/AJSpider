@@ -1,4 +1,4 @@
-package com.changwu.AJSpider.spiderCore;
+package com.changwu.spiderCore;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadFactory;
