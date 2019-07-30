@@ -11,7 +11,7 @@ import java.util.List;
  * @Author: Changwu
  * @Date: 2019/7/29 18:33
  */
-public class MyThreadExcutor extends SingleThreadSpiderExecutor<News> {
+public class MyThreadExcutor extends SpiderSingleThreadExecutor<News> {
 
     protected SpiderContainer resolution1(String s, SpiderContainer<News> spiderContainer, SpiderResolutionUtil spiderResolutionUtil) {
 

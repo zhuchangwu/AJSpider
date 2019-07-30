@@ -76,7 +76,7 @@ public final class SpiderBootStrap {
     private void distributeTask() {
         while (taskQueue.size() > 0) {
             // 通过轮询算法 , 轮询选出线程执行器
-            SingleThreadSpiderExecutor singleThreadExecutor = spiderReactor.nextSingleThreadExecutor();
+            SpiderSingleThreadExecutor singleThreadExecutor = spiderReactor.nextSingleThreadExecutor();
             String url = taskQueue.poll();
             // 把任务丢进当前执行器的队列,由他们自己执行
             singleThreadExecutor.addTask(url);

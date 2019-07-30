@@ -13,7 +13,7 @@ public final class SpiderReactor {
 
     private ExcutorChooser chooser; // 选择器
 
-    private SingleThreadSpiderExecutor[] executors; // 线程执行器数组
+    private SpiderSingleThreadExecutor[] executors; // 线程执行器数组
 
     private SpiderExecutorFactory executor; // 线程执行器,他可以创建创建的新的线程
 
@@ -32,11 +32,11 @@ public final class SpiderReactor {
     private void initExcutors(int threadNum, Class threadClazz) {
         // 创建出线程执行器来,之过不还没有进行start, 填充进下面的 执行器数组
         executor = new SpiderExecutorFactory(Executors.defaultThreadFactory());
-        executors = new SingleThreadSpiderExecutor[threadNum];
+        executors = new SpiderSingleThreadExecutor[threadNum];
 
         for (int i = 0; i < threadNum; i++) {
             try {
-                SingleThreadSpiderExecutor singleThreadExecutor = (SingleThreadSpiderExecutor) threadClazz.newInstance();
+                SpiderSingleThreadExecutor singleThreadExecutor = (SpiderSingleThreadExecutor) threadClazz.newInstance();
                 // 让他们全部指向一个线程执行器对象， 这个线程执行器可以创建出新的线程
                 singleThreadExecutor.setExcutor(executor);
                 executors[i] = singleThreadExecutor;
@@ -51,7 +51,7 @@ public final class SpiderReactor {
      *
      * @return
      */
-    public SingleThreadSpiderExecutor nextSingleThreadExecutor() {
+    public SpiderSingleThreadExecutor nextSingleThreadExecutor() {
         return this.chooser.chooseExcutor();
     }
 
@@ -63,7 +63,7 @@ public final class SpiderReactor {
             this.num = num;
         }
 
-        public SingleThreadSpiderExecutor chooseExcutor() {
+        public SpiderSingleThreadExecutor chooseExcutor() {
             if (isPowerOfTwo(num)){
                 return executors[idx.getAndIncrement() & executors.length - 1];
             }else{

@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * 由本类维护任务队列和唯一的一条线程
  * 泛型T 对象的类型
  */
-public abstract class SingleThreadSpiderExecutor<T> {
+public abstract class SpiderSingleThreadExecutor<T> {
 
     private Thread thread; // 与线程执行器唯一绑定的线程
 
@@ -37,7 +37,7 @@ public abstract class SingleThreadSpiderExecutor<T> {
 
     private SpiderResolutionUtil spiderResolutionUtil;  // 解析html的工具对象
 
-    public SingleThreadSpiderExecutor() {
+    public SpiderSingleThreadExecutor() {
         this.taskUrlQueue = new ConcurrentLinkedQueue<>();
     }
 
