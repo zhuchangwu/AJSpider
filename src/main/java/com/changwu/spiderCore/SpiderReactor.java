@@ -9,14 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  *  爬虫的  线程反应堆
  */
 
-public class SpiderReactor {
+public final class SpiderReactor {
 
     private ExcutorChooser chooser; // 选择器
 
     private SingleThreadSpiderExecutor[] executors; // 线程执行器数组
 
     private SpiderExecutorFactory executor; // 线程执行器,他可以创建创建的新的线程
-
 
     public SpiderReactor(int threadNum, Class threadClass) {
         this.chooser = new ExcutorChooser(threadNum); // 初始化选择器

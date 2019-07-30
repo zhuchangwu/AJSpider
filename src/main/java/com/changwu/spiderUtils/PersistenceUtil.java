@@ -2,45 +2,40 @@ package com.changwu.spiderUtils;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 
 /**
  * @Author: Changwu
  * @Date: 2019/7/28 10:47
  */
-public class PersistenceUtil<T> {
+public final class PersistenceUtil<T> {
 
     /**
      * 将url对应的image 持久化到本地指定的path目录下
-     *
      */
     public void PersistenceImageToLocalhost(String imageUrl, String path) {
         URL url = null;
         try {
             url = new URL(imageUrl);
-            DataInputStream dataInputStream = new DataInputStream(url.openStream());
+
             String imageName = Thread.currentThread().getName() + System.currentTimeMillis();
-
             if (imageUrl.contains("jpg")) {
-                path=path+"\\"+imageName+".jpg";
-                System.out.println("path111: "+path);
+                path = path + "\\" + imageName + ".jpg";
             } else if (imageUrl.contains("png")) {
-                path=path+"\\"+imageName+".png";
-                System.out.println("path222: "+path);
-
+                path = path + "\\" + imageName + ".png";
             }
-            FileOutputStream fileOutputStream = new FileOutputStream(new File(path));
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length;
 
-            while ((length = dataInputStream.read(buffer)) > 0) {
-                output.write(buffer, 0, length);
-            }
-            fileOutputStream.write(output.toByteArray());
-            dataInputStream.close();
-            fileOutputStream.close();
-        } catch (IOException e) {
+            ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+            FileChannel channel = new FileOutputStream(path).getChannel();
+            channel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+            readableByteChannel.close();
+            channel.close();
+        } catch (Exception e) {
+            System.out.println(Thread.currentThread().getName()+" 下载url:  "+url+"  失败");
             e.printStackTrace();
         }
     }
+
 }

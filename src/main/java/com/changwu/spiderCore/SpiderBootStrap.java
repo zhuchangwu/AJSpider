@@ -13,7 +13,7 @@ import java.util.Queue;
  *
  */
 
-public class SpiderBootStrap {
+public final class SpiderBootStrap {
 
     // 盛放任务url的队列
     private Queue<String> taskQueue;

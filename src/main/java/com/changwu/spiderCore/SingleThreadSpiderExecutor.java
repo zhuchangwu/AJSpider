@@ -1,6 +1,5 @@
 package com.changwu.spiderCore;
 
-import com.changwu.spiderUtils.IOUtils;
 import com.changwu.spiderUtils.PersistenceUtil;
 import com.changwu.spiderUtils.SpiderResolutionUtil;
 import org.apache.http.HttpEntity;
@@ -10,9 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -61,7 +58,7 @@ public abstract class SingleThreadSpiderExecutor<T> {
      */
     public void addTask(String task) {
         taskUrlQueue.offer(task);
-        System.out.println(this + "  当前队列任务数: " + taskUrlQueue.size());
+        System.out.println(this + "一级任务url数: " + taskUrlQueue.size());
     }
 
     /**
@@ -111,7 +108,7 @@ public abstract class SingleThreadSpiderExecutor<T> {
             response.close();
             httpClient.close();
         } catch (IOException e) {
-            // todo 记录下出问题的url
+            // 记录下出问题的url
             System.err.println("指定的url 不合法: "+url);
             e.printStackTrace();
         }
@@ -154,7 +151,7 @@ public abstract class SingleThreadSpiderExecutor<T> {
         String htmlSource = null;
 
         // 不管是什么编码,都转换成字节数组
-        byte[] contentByteArray = IOUtils.convertInputStreamToByteArray(entity.getContent());
+        byte[] contentByteArray = convertInputStreamToByteArray(entity.getContent());
 
         // 通过entity
         findCharset = EntityUtils.getContentCharSet(entity);
@@ -191,6 +188,25 @@ public abstract class SingleThreadSpiderExecutor<T> {
         } else { // 直接找到,直接编码返回
             return new String(contentByteArray, findCharset);
         }
+    }
+
+
+    /**
+     * 将inputStream转换成字节数组
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public byte[] convertInputStreamToByteArray(InputStream inputStream) throws IOException {
+        byte[] byteBuffer = new byte[4096];
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        int readlength = 0;
+        // 把InputStream中的数据.读进 byteBuffer容器
+        while((readlength = inputStream.read(byteBuffer))!=-1){
+            // 把指定长度的 字节信息写入到 outputStream中
+            byteArrayOutputStream.write(byteBuffer,0,readlength);
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 
 
@@ -273,6 +289,7 @@ public abstract class SingleThreadSpiderExecutor<T> {
 
                     // 解析html中的可变数量的实体对象,
                     spiderContainer = resolution1(html, this.spiderContainer, spiderResolutionUtil);
+                    checkSpiderContainerBeanListNotNull(spiderContainer);
 
                     // 满足如下条件说明存在二级任务,进一步 解析下载二级任务  把新值封装进对象,
                     if (0 != spiderContainer.getUrlList().size()) {
@@ -284,6 +301,7 @@ public abstract class SingleThreadSpiderExecutor<T> {
                         if (preNumber!=spiderContainer.getUrlList().size()){
                             htmls   =  downLoadHtmlList(spiderContainer.getUrlList());
                             spiderContainer = resolution3(htmls, spiderContainer, spiderResolutionUtil);
+
                         }
                     }
                     // 持久化;
@@ -294,13 +312,19 @@ public abstract class SingleThreadSpiderExecutor<T> {
                     this.spiderContainer.getBeanList().clear();
                 } else {
                     try {
-                        System.err.println(Thread.currentThread().getName() + "暂无任务可以执行,睡眠两秒");
+                        System.err.println(Thread.currentThread().getName() + ": 暂无任务可以执行,睡眠两秒");
                         Thread.sleep(2000);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
+        }
+    }
+    // 校验容器
+    public void checkSpiderContainerBeanListNotNull(SpiderContainer spiderContainer){
+        if (0==spiderContainer.getBeanList().size()){
+            throw new RuntimeException("您需要将解析后的 Bean 添加进SpiderContainer的 BeanList 然后返回");
         }
     }
 

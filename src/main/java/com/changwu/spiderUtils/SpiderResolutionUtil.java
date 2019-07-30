@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  *
  *  解析html的工具对象
  */
-public class SpiderResolutionUtil {
+public final class SpiderResolutionUtil {
 
     /**
      *  返回 prefix 和 suffix 之间的值 , 适合给前缀特别短的截取方法使用 -- 惰性匹配
