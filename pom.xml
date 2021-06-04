@@ -11,7 +11,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
+            <version>4.5.13</version>
         </dependency>
 
         <!--jsoup 可以使用类上Jquery css 等选择器,解析数据-->
